@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qahwa Coffee Login</title>
+  <meta name="description" content="Coffee app login screen UI in Flutter, live in a phone frame.">
+  <link rel="icon" type="image/png" href="app/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7eee2;
+      --bg-2: #e9f3ec;
+      --text: #1c1f2e;
+      --muted: #7d7f8c;
+      --accent: #4f9a6e;
+      --frame: #111216;
+      --frame-edge: #2b2d33;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #17181c;
+        --bg-2: #1d2a22;
+        --text: #f2f2f4;
+        --muted: #9a9ca8;
+        --frame-edge: #45474f;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #17181c;
+      --bg-2: #1d2a22;
+      --text: #f2f2f4;
+      --muted: #9a9ca8;
+      --frame-edge: #45474f;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: radial-gradient(circle at 20% 10%, var(--bg-2), var(--bg) 60%);
+      color: var(--text);
+      font-family: Poppins, system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Phone is laid out at real iPhone size, then scaled to fit the window. */
+    .stage { width: 414px; height: 868px; flex: none; transform-origin: center; }
+    .phone {
+      position: relative;
+      width: 414px;
+      height: 868px;
+      padding: 12px;
+      border-radius: 64px;
+      background: var(--frame);
+      box-shadow:
+        0 0 0 2px var(--frame-edge),
+        0 40px 80px rgba(0, 0, 0, 0.25),
+        0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    /* Side buttons. */
+    .phone::before, .phone::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      background: var(--frame-edge);
+      border-radius: 2px;
+    }
+    .phone::before { left: -5px; top: 170px; height: 100px; box-shadow: 0 -60px 0 -0px var(--frame-edge); }
+    .phone::after { right: -5px; top: 220px; height: 120px; }
+
+    .screen {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      border-radius: 52px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .status {
+      flex: none;
+      height: 50px;
+      padding: 16px 30px 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font: 600 15px/1 -apple-system, system-ui, sans-serif;
+      color: #000;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+    .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 122px;
+      height: 35px;
+      border-radius: 20px;
+      background: #000;
+      z-index: 2;
+    }
+    iframe { flex: 1; width: 100%; border: 0; display: block; }
+    /* Bottom safe area in the app's green, so content never sits under the bar. */
+    .home-bar {
+      flex: none;
+      height: 26px;
+      background: #4f9a6e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .home-indicator {
+      width: 134px;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.85);
+      pointer-events: none;
+    }
+
+    .caption {
+      flex: none;
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .caption a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .caption a:hover { text-decoration: underline; }
+
+    /* On a real phone, skip the frame and run the app full screen. */
+    @media (max-width: 500px) {
+      body { display: block; }
+      .stage, .phone, .screen { width: 100%; height: 100%; transform: none !important; }
+      .phone { padding: 0; border-radius: 0; box-shadow: none; background: #fff; }
+      .phone::before, .phone::after, .status, .island, .home-bar, .caption { display: none; }
+      .screen { border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status">
+          <span id="clock">9:41</span>
+          <span class="status-icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.3 10.3 0 0 0 8 .4C5.2.4 2.7 1.5.8 3.3L2 4.6a8.5 8.5 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.7 6.7 0 0 0 8 4c-1.8 0-3.4.7-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3Zm0 3.6c-.6 0-1.1.2-1.5.6L8 11.6l1.5-1.6c-.4-.4-.9-.6-1.5-.6Z"/></svg>
+            <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="20" height="9" rx="2"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" opacity="0.4"/></svg>
+          </span>
+        </div>
+        <iframe src="app/" title="Qahwa coffee login app"></iframe>
+        <div class="home-bar"><div class="home-indicator"></div></div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Built with Flutter ·
+    <a href="https://github.com/YaqoobDeveloper/Coffee-App-Login-Screen-UI-in-Flutter">View source on GitHub</a>
+  </p>
+
+  <script>
+    const stage = document.getElementById('stage');
+    function fit() {
+      if (window.innerWidth <= 500) { stage.style.transform = ''; stage.style.margin = ''; return; }
+      const scale = Math.min(1, (window.innerHeight - 70) / 868, (window.innerWidth - 32) / 414);
+      stage.style.transform = `scale(${scale})`;
+      // Collapse the empty space a scaled-down element would otherwise leave.
+      const gap = (868 * (1 - scale)) / 2;
+      stage.style.margin = `${-gap}px 0`;
+    }
+    fit();
+    window.addEventListener('resize', fit);
+
+    const clock = document.getElementById('clock');
+    function tick() {
+      const d = new Date();
+      clock.textContent = `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+    tick();
+    setInterval(tick, 30000);
+  </script>
+</body>
+</html>
